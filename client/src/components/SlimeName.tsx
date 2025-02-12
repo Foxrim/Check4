@@ -57,7 +57,7 @@ export default function SlimeName() {
 
   return (
     <>
-      <button onClick={handleModal} className={styles.login} type="button">
+      <button onClick={handleModal} className={styles.slimeName} type="button">
         <p>{slime?.name}</p>
       </button>
       {renameSlime && (
@@ -76,7 +76,11 @@ export default function SlimeName() {
             >
               Valider le nom
             </button>
-            <button type="button" onClick={handleModal}>
+            <button
+              className={styles.cancel}
+              type="button"
+              onClick={handleModal}
+            >
               Annuler
             </button>
           </form>

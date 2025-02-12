@@ -77,7 +77,7 @@ class PlayerRepository {
     return player;
   }
 
-  async update(player: Player) {
+  async edit(player: Player) {
     const [result] = await databaseClient.query<Result>(
       "update player set pseudo = ? where id = ?",
       [player.pseudo, player.id],

@@ -70,17 +70,12 @@ const edit: RequestHandler = async (req, res) => {
 
     const existingPlayer = await playerRepository.readByPseudo(pseudo);
 
-    if (!existingPlayer) {
-      res.status(400).json({ message: "Ce compte n'existe pas" });
-      return;
-    }
-
-    if (existingPlayer && existingPlayer.id !== id) {
+    if (existingPlayer) {
       res.status(400).json({ message: "Ce pseudo existe déjà" });
       return;
     }
 
-    const newPlayer = await playerRepository.update({
+    const newPlayer = await playerRepository.edit({
       id: id,
       pseudo: pseudo,
     });

@@ -75,6 +75,7 @@
 }
 .login,
 .slimeName,
+.playerPseudo,
 .logout {
   position: absolute;
   top: 2rem;
@@ -101,12 +102,17 @@
   }
 }
 
-.slimeName {
+.playerPseudo {
   top: 8rem;
+}
+
+.slimeName {
+  top: 13rem;
 }
 
 .login:hover,
 .slimeName:hover,
+.playerPseudo:hover,
 .logout:hover,
 .cancel:hover {
   background-color: black;
@@ -116,6 +122,14 @@
 .errorMessage {
   position: absolute;
   top: 50%;
+  left: 50%;
+  transform: translate(-50%, 75%);
+  cursor: default;
+}
+
+.errorMessageName {
+  position: absolute;
+  top: 44.5%;
   left: 50%;
   transform: translate(-50%, 75%);
   cursor: default;

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Logout from "../components/Logout";
+import PlayerPseudo from "../components/PlayerPseudo";
 import Slime from "../components/Slime";
 import SlimeColor from "../components/SlimeColor";
 import SlimeKeep from "../components/SlimeKeep";
@@ -43,6 +44,7 @@ export default function GamePage() {
       )}
 
       <Logout />
+      <PlayerPseudo />
 
       {quest1 && chooseKeepSlime && (
         <SlimeKeep

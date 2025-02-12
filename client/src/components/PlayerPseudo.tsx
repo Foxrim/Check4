@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
-import { useSlime } from "../contexts/SlimeContext";
 import { useAuth } from "../contexts/authContext";
 import styles from "../styles/Form.module.css";
 
-export default function SlimeName() {
-  const [renameSlime, setRenameSlime] = useState<boolean>(false);
-  const [name, setName] = useState("");
-  const [error, setError] = useState("");
-  const { slime, fetchSlime } = useSlime();
-  const { player } = useAuth();
+type PlayerProps = {
+  id: number;
+  pseudo: string;
+};
 
-  useEffect(() => {
-    fetchSlime();
-  }, [fetchSlime]);
+export default function PlayerPseudo() {
+  const [renamePlayer, setRenamePlayer] = useState<boolean>(false);
+  const [playerReload, setPlayerReaload] = useState<PlayerProps>();
+  const [pseudo, setPseudo] = useState("");
+  const [error, setError] = useState("");
+  const { player } = useAuth();
 
   useEffect(() => {
     if (error) {
@@ -25,7 +25,7 @@ export default function SlimeName() {
   }, [error]);
 
   const handleModal = () => {
-    setRenameSlime((prev) => !prev);
+    setRenamePlayer((prev) => !prev);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -33,17 +33,17 @@ export default function SlimeName() {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/slime/name/${player?.id}`,
+        `${import.meta.env.VITE_API_URL}/api/players/name/${player?.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name }),
+          body: JSON.stringify({ pseudo: pseudo }),
         },
       );
 
       if (response.ok) {
-        setRenameSlime(false);
-        fetchSlime();
+        setRenamePlayer(false);
+        handleReload();
       }
 
       if (!response.ok) {
@@ -55,26 +55,42 @@ export default function SlimeName() {
     }
   };
 
+  const handleReload = () => {
+    if (player?.id) {
+      fetch(`${import.meta.env.VITE_API_URL}/api/players/${player.id}`)
+        .then((response) => response.json())
+        .then((data) => setPlayerReaload(data));
+    }
+  };
+
   return (
     <>
-      <button onClick={handleModal} className={styles.slimeName} type="button">
-        <p>{slime?.name}</p>
+      <button
+        onClick={handleModal}
+        className={styles.playerPseudo}
+        type="button"
+      >
+        {!playerReload ? (
+          <p>{player?.pseudo}</p>
+        ) : (
+          <p>{playerReload?.pseudo}</p>
+        )}
       </button>
-      {renameSlime && (
+      {renamePlayer && (
         <div className={styles.form}>
-          <h1>Donner un nom au slime ?</h1>
+          <h1>Changer de pseudo ?</h1>
           <form onSubmit={handleSubmit}>
             <input
-              id="name"
+              id="pseudo"
               type="text"
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Trouvez lui un nom"
+              onChange={(e) => setPseudo(e.target.value)}
+              placeholder="Changer de pseudo"
             />
             <button
-              className={name.length > 0 ? styles.actif : styles.inactif}
+              className={pseudo.length > 0 ? styles.actif : styles.inactif}
               type="submit"
             >
-              Valider le nom
+              Valider le pseudo
             </button>
             <button
               className={styles.cancel}

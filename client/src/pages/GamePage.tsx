@@ -16,7 +16,7 @@ export default function GamePage() {
 
   useEffect(() => {
     fetchSlime();
-  });
+  }, [fetchSlime]);
 
   const alive = slime?.status === "alive";
 

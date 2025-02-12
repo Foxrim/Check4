@@ -39,6 +39,23 @@ const add: RequestHandler = async (req, res) => {
   }
 };
 
+const login: RequestHandler = async (req, res) => {
+  try {
+    const { pseudo } = req.body;
+
+    const existingPlayer = await playerRepository.readByPseudo(pseudo);
+
+    if (!existingPlayer) {
+      res.status(400).json({ message: "Ce compte n'existe pas" });
+    }
+
+    res.status(200).json(existingPlayer);
+  } catch (err) {
+    console.error("Erreur lors de la connection", err);
+    res.status(500).json({ message: "Echec de la connexion" });
+  }
+};
+
 const edit: RequestHandler = async (req, res) => {
   try {
     const id = Number(req.params.id);
@@ -75,4 +92,4 @@ const destroy: RequestHandler = async (req, res) => {
   res.json(affectedRows);
 };
 
-export default { browse, read, add, edit, destroy };
+export default { browse, read, add, edit, destroy, login };

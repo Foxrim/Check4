@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/authContext";
 import styles from "../styles/Form.module.css";
 
-export default function HomePage() {
+export default function LoginPage() {
   const [pseudo, setPseudo] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   useEffect(() => {
     if (error) {
@@ -24,20 +26,10 @@ export default function HomePage() {
       return;
     }
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/players`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ pseudo }),
-        },
-      );
+      const loggedPlayer = await login(pseudo);
 
-      if (response.ok) {
-        navigate("/login");
-      } else if (response.status === 400) {
-        const errorMessage = await response.json();
-        setError(errorMessage.message || "An error occurred");
+      if (loggedPlayer) {
+        navigate("/Connecté");
       }
     } catch (err) {
       console.error(
@@ -50,12 +42,12 @@ export default function HomePage() {
   return (
     <div className={styles.form}>
       <NavLink
-        to="/login"
+        to="/home"
         className={`material-symbols-outlined ${styles.login}`}
         type="button"
       >
-        login
-        <p>Se connecter</p>
+        person_add
+        <p>Créer un compte</p>
       </NavLink>
       <h1>Mon slime</h1>
       <form onSubmit={handleSubmit}>
@@ -63,13 +55,13 @@ export default function HomePage() {
           id="pseudo"
           type="text"
           onChange={(e) => setPseudo(e.target.value)}
-          placeholder="Choisissez un pseudo"
+          placeholder="Entrez votre pseudo"
         />
         <button
           className={pseudo.length > 0 ? styles.actif : styles.inactif}
           type="submit"
         >
-          Créer mon compte
+          Se connecter
         </button>
       </form>
       {error && <p className={styles.errorMessage}>{error}</p>}

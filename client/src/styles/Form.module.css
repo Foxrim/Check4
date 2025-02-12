@@ -66,43 +66,44 @@
       border: var(--inactif) solid 4px;
     }
   }
+}
+.login,
+.slimeName,
+.logOut {
+  position: absolute;
+  top: 2rem;
+  right: 0;
+  cursor: pointer;
+  background-color: transparent;
+  border-radius: 50px 0 0 50px;
+  border: var(--actif) solid 4px;
+  height: 4rem;
+  width: 20rem;
+  font-size: 18px;
+  padding-top: .1rem;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  font-size: 25px;
+  color: var(--actif);
+  text-decoration: none;
 
-  .login {
-    position: absolute;
-    top: 2rem;
-    right: 0;
-    cursor: pointer;
-    background-color: transparent;
-    border-radius: 50px 0 0 50px;
-    border: var(--actif) solid 4px;
-    height: 4rem;
-    width: 20rem;
-    font-size: 18px;
-    padding-top: .1rem;
-    transition: all 0.2s ease-in-out;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    font-size: 25px;
-    color: var(--actif);
-    text-decoration: none;
-
-    p {
-      font-family: "Courier New", Courier, monospace;
-    }
+  p {
+    font-family: "Courier New", Courier, monospace;
   }
+}
 
-  .login:hover {
-    background-color: black;
-    color: white;
-  }
+.login:hover {
+  background-color: black;
+  color: white;
+}
 
-  .errorMessage {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, 75%);
-    cursor: default;
-  }
+.errorMessage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 75%);
+  cursor: default;
 }

@@ -7,7 +7,7 @@ export default function LoginPage() {
   const [pseudo, setPseudo] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, errorMessage } = useAuth();
 
   useEffect(() => {
     if (error) {
@@ -31,6 +31,10 @@ export default function LoginPage() {
       if (loggedPlayer) {
         navigate("/game");
       }
+
+      if (!loggedPlayer) {
+        setError(errorMessage);
+      }
     } catch (err) {
       console.error(
         "Une erreur est survenue durant la création de compte",
@@ -43,11 +47,19 @@ export default function LoginPage() {
     <div className={styles.form}>
       <NavLink
         to="/home"
-        className={`material-symbols-outlined ${styles.login}`}
+        className={`material-symbols-outlined ${styles.createAccount}`}
         type="button"
       >
         person_add
         <p>Créer un compte</p>
+      </NavLink>
+      <NavLink
+        to="/login"
+        className={`material-symbols-outlined ${styles.login}`}
+        type="button"
+      >
+        login
+        <p>Se connecter</p>
       </NavLink>
       <h1>Mon slime</h1>
       <form onSubmit={handleSubmit}>

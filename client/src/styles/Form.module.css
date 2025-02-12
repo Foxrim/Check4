@@ -13,6 +13,7 @@
 
   h1 {
     cursor: default;
+    margin-bottom: 5rem;
   }
 
   form {
@@ -73,6 +74,7 @@
     }
   }
 }
+.createAccount,
 .login,
 .slimeName,
 .playerPseudo,
@@ -102,7 +104,8 @@
   }
 }
 
-.playerPseudo {
+.playerPseudo,
+.login {
   top: 8rem;
 }
 
@@ -111,6 +114,7 @@
 }
 
 .login:hover,
+.createAccount:hover,
 .slimeName:hover,
 .playerPseudo:hover,
 .logout:hover,
@@ -121,7 +125,7 @@
 
 .errorMessage {
   position: absolute;
-  top: 50%;
+  top: 53%;
   left: 50%;
   transform: translate(-50%, 75%);
   cursor: default;

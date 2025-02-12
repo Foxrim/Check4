@@ -20,12 +20,14 @@ class PlayerRepository {
       "insert into slime (name, color, player_id) values (?, ?, ?)",
       ["Slime", "grey", playerId],
     );
-
+    await slimeResult;
     return result.insertId;
   }
 
   async readAll() {
-    const [rows] = await databaseClient.query<Rows>("select * from player");
+    const [rows] = await databaseClient.query<Rows>(
+      "select * from player p left join slime s ON s.player_id = p.id",
+    );
 
     return rows as Player[];
   }
@@ -41,11 +43,38 @@ class PlayerRepository {
 
   async readByPseudo(pseudo: string) {
     const [rows] = await databaseClient.query<Rows>(
-      "select * from player where pseudo = ?",
+      `SELECT * 
+        FROM player
+        WHERE pseudo = ?
+      `,
       [pseudo],
     );
 
-    return rows[0] as Player[];
+    return rows[0] as Player;
+  }
+
+  async login(pseudo: string) {
+    const [rows] = await databaseClient.query<Rows>(
+      `SELECT p.*, s.* 
+        FROM player p
+        LEFT JOIN slime s ON p.id = s.player_id
+        WHERE p.pseudo = ?
+      `,
+      [pseudo],
+    );
+
+    const player = rows.map((row) => ({
+      id: row.id,
+      pseudo: row.pseudo,
+      slime: {
+        name: row.name,
+        status: row.status,
+        color: row.color,
+        playerID: row.player_id,
+      },
+    }));
+
+    return player;
   }
 
   async update(player: Player) {

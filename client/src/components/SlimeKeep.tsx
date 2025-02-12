@@ -1,19 +1,60 @@
 import { useState } from "react";
+import { useAuth } from "../contexts/authContext";
 import styles from "../styles/Form.module.css";
 
-export default function SlimeKeep() {
-  const [keepSlime, setKeepSlime] = useState("");
+type SlimeKeepProps = {
+  setChooseKeepSlime: React.Dispatch<React.SetStateAction<boolean>>;
+  setQuest1: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-  const handleKeepSlime = (e: React.ChangeEvent<HTMLInputElement>) => {
+export default function SlimeKeep({
+  setQuest1,
+  setChooseKeepSlime,
+}: SlimeKeepProps) {
+  const [keepSlime, setKeepSlime] = useState("");
+  const { player } = useAuth();
+
+  const handleKeepSlimeOrNot = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setKeepSlime(value);
     setKeepSlime(value);
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (keepSlime !== "yes" && keepSlime !== "no") {
+      return;
+    }
+
+    try {
+      if (keepSlime === "no") {
+        fetch(
+          `${import.meta.env.VITE_API_URL}/api/slime/status/${player?.id}`,
+          {
+            method: "PUT",
+          },
+        );
+        setQuest1(false);
+        setChooseKeepSlime(false);
+        alert("Vous avez tuer le slime et prit 2 points d'expérience");
+      }
+
+      if (keepSlime === "yes") {
+        setQuest1(false);
+        setChooseKeepSlime(false);
+        alert("Vous avez décidé de garder le slime");
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+      alert("An error occurred while processing your request.");
+    }
+  };
+
   return (
     <div className={styles.form}>
       <h1>Voulez-vous garder ce slime ?</h1>
-      <form>
+      <form onSubmit={handleSubmit}>
         <label
           className={keepSlime === "yes" ? styles.yesKeep : ""}
           htmlFor="yes"
@@ -25,7 +66,7 @@ export default function SlimeKeep() {
             type="radio"
             name="keepSlime"
             value="yes"
-            onChange={handleKeepSlime}
+            onChange={handleKeepSlimeOrNot}
           />
         </label>
         <label className={keepSlime === "no" ? styles.noKeep : ""} htmlFor="no">
@@ -36,7 +77,7 @@ export default function SlimeKeep() {
             type="radio"
             name="keepSlime"
             value="no"
-            onChange={handleKeepSlime}
+            onChange={handleKeepSlimeOrNot}
           />
         </label>
         <button

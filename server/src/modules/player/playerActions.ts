@@ -19,14 +19,14 @@ const add: RequestHandler = async (req, res) => {
     const { pseudo } = req.body;
 
     if (!pseudo || typeof pseudo !== "string") {
-      res.status(400).json({ message: "Invalid pseudo value" });
+      res.status(400).json({ message: "Pseudo invalide" });
       return;
     }
 
     const existingPlayer = await playerRepository.readByPseudo(pseudo);
 
     if (existingPlayer) {
-      res.status(400).json({ message: "Pseudo already exists" });
+      res.status(400).json({ message: "Ce pseudo existe déjà" });
       return;
     }
 
@@ -45,14 +45,14 @@ const edit: RequestHandler = async (req, res) => {
     const { pseudo } = req.body;
 
     if (!pseudo || typeof pseudo !== "string") {
-      res.status(400).json({ message: "Invalid pseudo value" });
+      res.status(400).json({ message: "Pseudo invalide" });
       return;
     }
 
     const existingPlayer = await playerRepository.readByPseudo(pseudo);
 
     if (existingPlayer && existingPlayer[0]?.id !== id) {
-      res.status(400).json({ message: "Pseudo already exists" });
+      res.status(400).json({ message: "Ce pseudo existe déjà" });
       return;
     }
 

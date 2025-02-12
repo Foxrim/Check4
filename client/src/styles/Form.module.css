@@ -52,4 +52,12 @@
       border: var(--inactif) solid 4px;
     }
   }
+
+  .errorMessage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 75%);
+    cursor: default;
+  }
 }

@@ -1,10 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/Form.module.css";
 
 export default function HomePage() {
   const [pseudo, setPseudo] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        setError("");
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,7 +36,8 @@ export default function HomePage() {
       if (response.ok) {
         navigate("/house");
       } else if (response.status === 400) {
-        alert(response);
+        const errorMessage = await response.json();
+        setError(errorMessage.message || "An error occurred");
       }
     } catch (err) {
       console.error(
@@ -52,6 +64,7 @@ export default function HomePage() {
           Charger mon monde
         </button>
       </form>
+      {error && <p className={styles.errorMessage}>{error}</p>}
     </div>
   );
 }

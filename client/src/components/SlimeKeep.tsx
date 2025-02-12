@@ -5,10 +5,12 @@ import styles from "../styles/Form.module.css";
 type SlimeKeepProps = {
   setChooseKeepSlime: React.Dispatch<React.SetStateAction<boolean>>;
   setQuest1: React.Dispatch<React.SetStateAction<boolean>>;
+  setQuest2: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function SlimeKeep({
   setQuest1,
+  setQuest2,
   setChooseKeepSlime,
 }: SlimeKeepProps) {
   const [keepSlime, setKeepSlime] = useState("");
@@ -44,6 +46,7 @@ export default function SlimeKeep({
         setQuest1(false);
         setChooseKeepSlime(false);
         alert("Vous avez décidé de garder le slime");
+        setQuest2(true);
       }
     } catch (error) {
       console.error("An error occurred:", error);
@@ -88,7 +91,7 @@ export default function SlimeKeep({
           }
           type="submit"
         >
-          valider votre choix
+          Valider votre choix
         </button>
       </form>
     </div>

@@ -63,7 +63,7 @@ export default function HomePage() {
           id="pseudo"
           type="text"
           onChange={(e) => setPseudo(e.target.value)}
-          placeholder="Choisissez un pseudo"
+          placeholder="Choisissez votre pseudo"
         />
         <button
           className={pseudo.length > 0 ? styles.actif : styles.inactif}

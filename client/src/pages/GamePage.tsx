@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import SlimeKeep from "../components/SlimeKeep";
+import SlimeName from "../components/SlimeName";
 import { useSlime } from "../contexts/SlimeContext";
 import styles from "../styles/Game.module.css";
 
@@ -9,6 +10,7 @@ export default function GamePage() {
   //QUEST
   //Accès aux quest que si elle sont true. Si elles sont false, alors elles sont déjà terminées
   const [quest1, setQuest1] = useState<boolean>(true);
+  const [quest2, setQuest2] = useState<boolean>(false);
 
   const handleKeepSlime = () => {
     setChooseKeepSlime(true);
@@ -35,8 +37,11 @@ export default function GamePage() {
         <SlimeKeep
           setQuest1={setQuest1}
           setChooseKeepSlime={setChooseKeepSlime}
+          setQuest2={setQuest2}
         />
       )}
+
+      {quest2 && <SlimeName />}
     </>
   );
 }

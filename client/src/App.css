@@ -14,4 +14,10 @@ body {
   --background-form: rgba(0, 0, 0, 0.37);
   --slime-border-grey: grey;
   --slime-color-grey: rgb(85, 85, 85);
+  --slime-border-red: rgb(206, 0, 0);
+  --slime-color-red: rgb(236, 0, 0);
+  --slime-border-green: rgb(0, 151, 0);
+  --slime-color-green: rgb(31, 156, 37);
+  --slime-border-blue: rgb(0, 137, 216);
+  --slime-color-blue: rgb(0, 127, 211);
 }

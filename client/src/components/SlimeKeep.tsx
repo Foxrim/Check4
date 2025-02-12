@@ -19,7 +19,6 @@ export default function SlimeKeep({
   const handleKeepSlimeOrNot = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setKeepSlime(value);
-    setKeepSlime(value);
   };
 
   const handleSubmit = (e: React.FormEvent) => {

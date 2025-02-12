@@ -1,7 +1,25 @@
 .slime {
-  background-color: var(--slime-color-grey);
-  border: solid var(--slime-border-grey) 2px;
   border-radius: 50%;
   height: 50px;
   width: 50px;
+}
+
+.grey {
+  background-color: var(--slime-color-grey);
+  border: solid var(--slime-border-grey) 2px;
+}
+
+.red {
+  background-color: var(--slime-color-red);
+  border: solid var(--slime-border-red) 2px;
+}
+
+.green {
+  background-color: var(--slime-color-green);
+  border: solid var(--slime-border-green) 2px;
+}
+
+.blue {
+  background-color: var(--slime-color-blue);
+  border: solid var(--slime-border-blue) 2px;
 }

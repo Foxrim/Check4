@@ -3,7 +3,9 @@ import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import App from "./App";
+import AuthPlayers from "./components/AuthPlayers";
 import { AuthProvider } from "./contexts/authContext";
+import GamePage from "./pages/GamePage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 
@@ -19,6 +21,16 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: <LoginPage />,
+      },
+      {
+        path: "",
+        element: <AuthPlayers />,
+        children: [
+          {
+            path: "game",
+            element: <GamePage />,
+          },
+        ],
       },
     ],
   },

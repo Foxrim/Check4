@@ -1,0 +1,7 @@
+.slime {
+  background-color: var(--slime-color-grey);
+  border: solid var(--slime-border-grey) 2px;
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+}

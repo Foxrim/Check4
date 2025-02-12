@@ -91,7 +91,7 @@ export default function SlimeKeep({
           }
           type="submit"
         >
-          valider votre choix
+          Valider votre choix
         </button>
       </form>
     </div>

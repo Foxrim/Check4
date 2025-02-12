@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Logout from "../components/Logout";
 import SlimeKeep from "../components/SlimeKeep";
 import SlimeName from "../components/SlimeName";
 import { useSlime } from "../contexts/SlimeContext";
@@ -32,6 +33,8 @@ export default function GamePage() {
           className={styles.slime}
         />
       )}
+
+      <Logout />
 
       {quest1 && chooseKeepSlime && (
         <SlimeKeep

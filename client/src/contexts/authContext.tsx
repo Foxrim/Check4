@@ -56,6 +56,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       if (loggedPlayer) {
         localStorage.setItem("isAuth", "true");
+        sessionStorage.setItem("playerPseudo", `${loggedPlayer.pseudo}`);
       }
 
       return loggedPlayer;

@@ -29,7 +29,7 @@ export default function LoginPage() {
       const loggedPlayer = await login(pseudo);
 
       if (loggedPlayer) {
-        navigate("/Connecté");
+        navigate("/game");
       }
     } catch (err) {
       console.error(

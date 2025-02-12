@@ -6,6 +6,10 @@
   height: 100vh;
   width: 100vw;
   background-color: var(--background-form);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 20;
 
   h1 {
     cursor: default;
@@ -16,7 +20,9 @@
     flex-direction: column;
     gap: 2rem;
 
-    input {
+    input,
+    button,
+    label {
       background-color: transparent;
       border-radius: 50px;
       border: var(--actif) solid 4px;
@@ -26,13 +32,21 @@
       font-size: 18px;
     }
 
+    label {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding-left: 0;
+    }
+
+    .noKeep,
+    .yesKeep {
+      background-color: black;
+      color: white;
+    }
+
     button {
-      background-color: transparent;
-      border-radius: 50px;
-      border: var(--actif) solid 4px;
-      height: 4rem;
-      width: 20rem;
-      font-size: 18px;
       padding-top: .1rem;
       transition: all 0.2s ease-in-out;
     }

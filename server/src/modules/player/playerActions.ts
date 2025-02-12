@@ -47,9 +47,11 @@ const login: RequestHandler = async (req, res) => {
 
     if (!existingPlayer) {
       res.status(400).json({ message: "Ce compte n'existe pas" });
+      return;
     }
 
-    res.status(200).json(existingPlayer);
+    const findPlayer = await playerRepository.login(pseudo);
+    res.status(200).json(findPlayer);
   } catch (err) {
     console.error("Erreur lors de la connection", err);
     res.status(500).json({ message: "Echec de la connexion" });
@@ -68,7 +70,12 @@ const edit: RequestHandler = async (req, res) => {
 
     const existingPlayer = await playerRepository.readByPseudo(pseudo);
 
-    if (existingPlayer && existingPlayer[0]?.id !== id) {
+    if (!existingPlayer) {
+      res.status(400).json({ message: "Ce compte n'existe pas" });
+      return;
+    }
+
+    if (existingPlayer && existingPlayer.id !== id) {
       res.status(400).json({ message: "Ce pseudo existe déjà" });
       return;
     }
@@ -78,7 +85,7 @@ const edit: RequestHandler = async (req, res) => {
       pseudo: pseudo,
     });
 
-    res.json(newPlayer);
+    res.status(200).json(newPlayer);
   } catch (error) {
     console.error("Error updating player:", error);
     res.status(500).json({ message: "Failed to update player" });

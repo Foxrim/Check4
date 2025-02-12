@@ -21,6 +21,7 @@ import slimeActions from "./modules/slime/slimeActions";
 router.get("/api/slime/:player_id", slimeActions.read);
 router.put("/api/slime/name/:player_id", slimeActions.updateName);
 router.put("/api/slime/color/:player_id", slimeActions.updateColor);
+router.put("/api/slime/status/:player_id", slimeActions.updateStatus);
 router.delete("/api/slime/:player_id", slimeActions.destroy);
 
 /* ************************************************************************* */

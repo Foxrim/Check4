@@ -48,16 +48,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const data = await response.json();
 
       const loggedPlayer = {
-        id: data.id,
-        pseudo: data.pseudo,
+        id: data[0].id,
+        pseudo: data[0].pseudo,
       };
 
       setPlayer(loggedPlayer);
 
       if (loggedPlayer) {
         localStorage.setItem("isAuth", "true");
-        sessionStorage.setItem("userId", `${loggedPlayer.id}`);
-        sessionStorage.setItem("userPseudo", `${loggedPlayer.pseudo}`);
       }
 
       return loggedPlayer;
@@ -71,8 +69,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const logout = () => {
     setPlayer(null);
     localStorage.removeItem("isAuth");
-    sessionStorage.removeItem("userId");
-    sessionStorage.removeItem("userPseudo");
   };
 
   return (

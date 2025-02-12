@@ -5,41 +5,51 @@
   flex-direction: column;
   height: 100vh;
   width: 100vw;
-  gap: 2rem;
   background-color: var(--background-form);
 
   h1 {
     cursor: default;
   }
 
-  input {
-    background-color: transparent;
-    border-radius: 50px;
-    border: var(--actif) solid 4px;
-    height: 4rem;
-    width: 20rem;
-    padding-left: 1.5rem;
-    font-size: 18px;
-  }
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 
-  button {
-    background-color: transparent;
-    border-radius: 50px;
-    border: var(--actif) solid 4px;
-    height: 4rem;
-    width: 20rem;
-    font-size: 18px;
-    cursor: pointer;
-    padding-top: .1rem;
-    transition: all 0.2s ease-in-out;
-  }
+    input {
+      background-color: transparent;
+      border-radius: 50px;
+      border: var(--actif) solid 4px;
+      height: 4rem;
+      width: 20rem;
+      padding-left: 1.5rem;
+      font-size: 18px;
+    }
 
-  button:hover {
-    background-color: black;
-    color: white;
-  }
+    button {
+      background-color: transparent;
+      border-radius: 50px;
+      border: var(--actif) solid 4px;
+      height: 4rem;
+      width: 20rem;
+      font-size: 18px;
+      padding-top: .1rem;
+      transition: all 0.2s ease-in-out;
+    }
 
-  .inactif {
-    border: var(--inactif) solid 4px;
+    .actif {
+      cursor: pointer;
+    }
+
+    .actif:hover {
+      background-color: black;
+      color: white;
+    }
+
+    .inactif {
+      cursor: default;
+      color: var(--inactif);
+      border: var(--inactif) solid 4px;
+    }
   }
 }

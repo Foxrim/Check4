@@ -10,6 +10,6 @@ body {
 
 :root {
   --actif: black;
-  --inactif: grey;
+  --inactif: rgb(109, 109, 109);
   --background-form: rgba(0, 0, 0, 0.37);
 }

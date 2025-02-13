@@ -1,3 +1,4 @@
+import exclam from "../../public/point-exclamation.png";
 import styles from "../styles/Game.module.css";
 
 type FurnitureProps = {
@@ -6,6 +7,10 @@ type FurnitureProps = {
   handleKitchen: () => void;
   handleCupboard2: () => void;
   handleCupboard1: () => void;
+  exTable: boolean;
+  exCarpet: boolean;
+  exCupboard: boolean;
+  exKitchen: boolean;
 };
 
 export default function Furniture({
@@ -13,6 +18,10 @@ export default function Furniture({
   handleCarpet,
   handleKitchen,
   handleCupboard1,
+  exTable,
+  exCarpet,
+  exCupboard,
+  exKitchen,
 }: FurnitureProps) {
   return (
     <div className={styles.furniture}>
@@ -40,6 +49,34 @@ export default function Furniture({
         className={styles.table}
         title="cliquer pour intéragir"
       />
+      {exCupboard && (
+        <img
+          className={styles.exclamCupboard1}
+          src={exclam}
+          alt="point d'exclamation"
+        />
+      )}
+      {exKitchen && (
+        <img
+          className={styles.exclamKitchen}
+          src={exclam}
+          alt="point d'exclamation"
+        />
+      )}
+      {exTable && (
+        <img
+          className={styles.exclamTable}
+          src={exclam}
+          alt="point d'exclamation"
+        />
+      )}
+      {exCarpet && (
+        <img
+          className={styles.exclamCarpet}
+          src={exclam}
+          alt="point d'exclamation"
+        />
+      )}
     </div>
   );
 }

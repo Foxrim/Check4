@@ -61,6 +61,20 @@ const updateStatus: RequestHandler = async (req, res) => {
   }
 };
 
+const updateStatusHidden: RequestHandler = async (req, res) => {
+  try {
+    const slime = {
+      player_id: Number(req.params.player_id),
+    };
+    const slimes = await slimeRepository.editStatusHidden(slime);
+
+    res.status(200).json(slimes);
+  } catch (error) {
+    console.error("Error updating slime status:", error);
+    res.status(500).json({ message: "Failed to update slime status" });
+  }
+};
+
 const destroy: RequestHandler = async (req, res) => {
   try {
     const slime = { player_id: Number(req.params.player_id) };
@@ -73,4 +87,11 @@ const destroy: RequestHandler = async (req, res) => {
   }
 };
 
-export default { read, updateName, updateColor, updateStatus, destroy };
+export default {
+  read,
+  updateName,
+  updateColor,
+  updateStatus,
+  updateStatusHidden,
+  destroy,
+};

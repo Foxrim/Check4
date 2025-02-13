@@ -133,4 +133,60 @@
     transform: translate(-50%, -50%);
     cursor: pointer;
   }
+
+  .exclamCupboard1 {
+    position: absolute;
+    height: 5rem;
+    width: 5rem;
+    z-index: 10;
+    top: 10%;
+    left: 11%;
+    transform: translate(-50%, -50%);
+    animation: exclamCupboard1 2s infinite linear;
+  }
+
+  .exclamKitchen {
+    position: absolute;
+    height: 5rem;
+    width: 5rem;
+    z-index: 10;
+    top: 29%;
+    left: 89%;
+    transform: translate(-50%, -50%);
+    animation: exclamCupboard1 2s infinite linear;
+  }
+
+  .exclamTable {
+    position: absolute;
+    height: 5rem;
+    width: 5rem;
+    z-index: 10;
+    top: 57%;
+    left: 55.5%;
+    transform: translate(-50%, 280%);
+    animation: exclamCupboard1 2s infinite linear;
+  }
+
+  .exclamCarpet {
+    position: absolute;
+    height: 5rem;
+    width: 5rem;
+    z-index: 10;
+    top: 44%;
+    left: 39%;
+    transform: translate(-50%, 600%);
+    animation: exclamCupboard1 2s infinite linear;
+  }
+}
+
+@keyframes exclamCupboard1 {
+  0% {
+    top: 10%;
+  }
+  50% {
+    top: 15%;
+  }
+  100% {
+    top: 10%;
+  }
 }

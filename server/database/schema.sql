@@ -6,7 +6,7 @@ create table player (
 create table slime (
   id int unsigned primary key auto_increment not null,
   name varchar(15) not null DEFAULT 'Slime',
-  status ENUM('alive', 'dead') DEFAULT 'alive',
+  status ENUM('hidden','alive', 'dead') DEFAULT 'hidden',
   color ENUM('grey','red','green','blue') DEFAULT 'grey',
   player_id INT UNSIGNED NOT NULL,
   foreign key(player_id) references player(id)

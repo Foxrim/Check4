@@ -73,7 +73,7 @@ export default function Dialogue() {
   };
 
   useEffect(() => {
-    if (slime?.status === "alive" && isNotHidden) {
+    if (slime?.status === "alive" && isNotHidden === true) {
       setExCupboard(false);
       setExKitchen(false);
       setExCarpet(false);

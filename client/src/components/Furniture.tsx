@@ -18,6 +18,7 @@ export default function Furniture({
   handleCarpet,
   handleKitchen,
   handleCupboard1,
+  handleCupboard2,
   exTable,
   exCarpet,
   exCupboard,
@@ -26,8 +27,8 @@ export default function Furniture({
   return (
     <div className={styles.furniture}>
       <span
-        onClick={handleCupboard1}
-        onKeyDown={handleCupboard1}
+        onClick={exCupboard === true ? handleCupboard1 : handleCupboard2}
+        onKeyDown={exCupboard === true ? handleCupboard1 : handleCupboard2}
         className={styles.cupboard}
         title="cliquer pour intéragir"
       />

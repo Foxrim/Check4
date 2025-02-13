@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useQuest } from "../contexts/QuestContext";
 import { useSlime } from "../contexts/SlimeContext";
 import { useAuth } from "../contexts/authContext";
 import styles from "../styles/Game.module.css";
@@ -6,9 +7,14 @@ import Furniture from "./Furniture";
 
 export default function Dialogue() {
   const { player } = useAuth();
+  const { quest } = useQuest();
   const { slime, fetchSlime } = useSlime();
 
   const [dialogues, setDialogues] = useState([""]);
+
+  useEffect(() => {
+    fetchSlime();
+  }, [fetchSlime]);
 
   useEffect(() => {
     if (slime?.status === "hidden") {
@@ -17,7 +23,7 @@ export default function Dialogue() {
         "   J'espère que vous vous y plairez. ",
         "   N'hésitez pas à explorer les environs. ",
       ]);
-    } else if (slime?.status === "alive") {
+    } else if (slime?.status === "alive" && quest?.keep_slime === true) {
       setDialogues([
         "   Vous êtes de retour ? ",
         "   Votre slime vous attendais. ",
@@ -29,14 +35,8 @@ export default function Dialogue() {
         "   ... ",
         "   Si vous trouvez cette maison si vide c'est par ce que le slime qui y vivait était mort par votre faute ! ",
       ]);
-    } else {
-      setDialogues([
-        "   BBienvenue dans votre nouvelle maison ! ",
-        "   J'espère que vous vous y plairez. ",
-        "   N'hésitez pas à explorer les environs. ",
-      ]);
     }
-  }, [slime?.status]);
+  }, [slime?.status, quest?.keep_slime]);
 
   const [exTable, setExTable] = useState<boolean>(true);
   const [exCarpet, setExCarpet] = useState<boolean>(true);
@@ -81,6 +81,13 @@ export default function Dialogue() {
     "   *zieute* ",
     "   ... ",
   ]);
+  const dNewName = useMemo(() => {
+    return [
+      `    ${slime?.name} ???  `,
+      "   *sautille* ",
+      "   Ce nouveau nom semble le rendre heureux ",
+    ];
+  }, [slime?.name]);
   const [dCupboard2] = useState(
     "   Il n'y a pas encore de slime caché derrière j'espère ?",
   );
@@ -147,6 +154,16 @@ export default function Dialogue() {
       sessionStorage.removeItem("KeepNo");
     }
   });
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    const newName = sessionStorage.getItem("newName");
+
+    if (newName) {
+      startNewDialogue(dNewName);
+      sessionStorage.removeItem("newName");
+    }
+  }, [dNewName, slime?.name]);
 
   useEffect(() => {
     if (slime?.status === "hidden") {

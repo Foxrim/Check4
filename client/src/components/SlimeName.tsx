@@ -44,6 +44,7 @@ export default function SlimeName() {
       if (response.ok) {
         setRenameSlime(false);
         fetchSlime();
+        sessionStorage.setItem("newName", name);
       }
 
       if (!response.ok) {

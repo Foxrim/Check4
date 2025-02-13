@@ -28,6 +28,7 @@ export default function Furniture({
   exKitchen,
 }: FurnitureProps) {
   const [keepSlime, setKeepSlime] = useState("");
+  const [renameSlime, setRenameSlime] = useState("");
   const { quest, fetchQuest } = useQuest();
   const { slime } = useSlime();
 
@@ -37,8 +38,10 @@ export default function Furniture({
 
       if (quest) {
         setKeepSlime(quest.keep_slime ? "TRUE" : "FALSE");
+        setRenameSlime(quest.choose_name ? "TRUE" : "FALSE");
       } else {
         setKeepSlime("FALSE");
+        setRenameSlime("FALSE");
       }
     };
 
@@ -106,6 +109,15 @@ export default function Furniture({
           alt="point d'exclamation"
         />
       )}
+      {renameSlime === "FALSE" &&
+        keepSlime === "TRUE" &&
+        slime?.name === "Slime" && (
+          <img
+            className={styles.exclamRename}
+            src={exclam}
+            alt="point d'exclamation"
+          />
+        )}
     </div>
   );
 }

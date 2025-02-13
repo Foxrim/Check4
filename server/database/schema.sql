@@ -15,6 +15,7 @@ create table slime (
 create table quest (
  id int unsigned primary key auto_increment not null,
  keep_slime boolean default false,
+ choose_name boolean default false,
  choose_color boolean default false,
  player_id int unsigned NOT null,
  foreign key(player_id) references player(id)

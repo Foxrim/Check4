@@ -10,6 +10,7 @@ import { useAuth } from "./authContext";
 type Quest = {
   id: number;
   keep_slime: boolean;
+  choose_name: boolean;
   choose_color: boolean;
   player_id: number;
 };

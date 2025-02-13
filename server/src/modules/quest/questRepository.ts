@@ -19,6 +19,15 @@ class QuestRepository {
     return result.affectedRows;
   }
 
+  async editChooseName(player_id: number) {
+    const [result] = await databaseClient.query<Result>(
+      "UPDATE quest SET choose_name = true WHERE player_id = ?",
+      [player_id],
+    );
+
+    return result.affectedRows;
+  }
+
   async editChooseColor(player_id: number) {
     const [result] = await databaseClient.query<Result>(
       "UPDATE quest SET choose_color = true WHERE player_id = ?",

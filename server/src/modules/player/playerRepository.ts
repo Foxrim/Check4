@@ -19,6 +19,7 @@ type PlayerWithRelations = {
   quest: {
     id: number;
     keep_slime: boolean;
+    choose_name: boolean;
     choose_color: boolean;
   } | null;
 };
@@ -65,6 +66,7 @@ class PlayerRepository {
       },
       quest: {
         keep_slime: row.keep_slime,
+        choose_name: row.choose_name,
         choose_color: row.choose_color,
       },
     })) as PlayerWithRelations[];
@@ -113,6 +115,7 @@ class PlayerRepository {
       },
       quest: {
         keep_slime: row.keep_slime,
+        choose_name: row.choose_name,
         choose_color: row.choose_color,
       },
     }));

@@ -17,6 +17,7 @@ export default function GamePage() {
   const { quest, fetchQuest } = useQuest();
   const [modal, setModal] = useState<boolean>(false);
   const [keepSlime, setKeepSlime] = useState("");
+  const [chooseName, setChooseName] = useState("");
   const [chooseColor, setChooseColor] = useState("");
 
   useEffect(() => {
@@ -34,6 +35,7 @@ export default function GamePage() {
   useEffect(() => {
     if (quest) {
       setKeepSlime(quest.keep_slime ? "TRUE" : "FALSE");
+      setChooseName(quest.choose_name ? "TRUE" : "FALSE");
       setChooseColor(quest.choose_color ? "TRUE" : "FALSE");
     } else {
       setKeepSlime("FALSE");
@@ -76,9 +78,10 @@ export default function GamePage() {
       )}
 
       {keepSlime === "TRUE" && <SlimeName />}
-      {modal && keepSlime === "TRUE" && chooseColor === "FALSE" && (
-        <SlimeColor handleModal={handleModal} />
-      )}
+      {modal &&
+        keepSlime === "TRUE" &&
+        chooseColor === "FALSE" &&
+        chooseName === "TRUE" && <SlimeColor handleModal={handleModal} />}
     </>
   );
 }

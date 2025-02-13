@@ -39,6 +39,15 @@ class SlimeRepository {
     return result.affectedRows;
   }
 
+  async editStatusHidden(slime: { player_id: number }) {
+    const [result] = await databaseClient.query<Result>(
+      "update slime set status = 'alive' where player_id = ?",
+      [slime.player_id],
+    );
+
+    return result.affectedRows;
+  }
+
   async delete(id: number) {
     const [result] = await databaseClient.query<Result>(
       "delete from slime where id = ?",

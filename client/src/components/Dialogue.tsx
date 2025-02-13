@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useSlime } from "../contexts/SlimeContext";
+import { useAuth } from "../contexts/authContext";
 import styles from "../styles/Game.module.css";
 import Furniture from "./Furniture";
 
@@ -9,10 +11,20 @@ export default function Dialogue() {
     "   N'hésitez pas à explorer les environs. ",
   ];
 
+  const [exTable, setExTable] = useState<boolean>(true);
+  const [exCarpet, setExCarpet] = useState<boolean>(true);
+  const [exCupboard, setExCupboard] = useState<boolean>(true);
+  const [exKitchen, setExKitchen] = useState<boolean>(true);
+  const [isNotHidden, setIsNotHidden] = useState<boolean>(false);
+
   const [dialogues, setDialogues] = useState<string[]>(initialDialogues);
   const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
   const [text, setText] = useState("");
-  const [dCupboard1] = useState("   !!? ");
+  const [dCupboard1] = useState([
+    "   !!? ",
+    "   *bouge* ",
+    "   *bouge*bouge*bouge* ",
+  ]);
   const [dCupboard2] = useState(
     "   Il n'y a pas encore de slime caché derrière j'espère ?",
   );
@@ -24,31 +36,96 @@ export default function Dialogue() {
   const speed = 50;
   const [typing, setTyping] = useState(false);
 
+  const { player } = useAuth();
+  const { slime, fetchSlime } = useSlime();
+
+  const startNewDialogue = (newDialogues: string[]) => {
+    setDialogues(newDialogues);
+    setCurrentDialogueIndex(0);
+    setText("");
+  };
+
   const handleTable = () => {
-    setDialogues((prevDialogues) => [...prevDialogues, dTable]);
+    startNewDialogue([dTable]);
+    setExTable(false);
   };
 
   const handleCarpet = () => {
-    setDialogues((prevDialogues) => [...prevDialogues, dCarpet]);
+    startNewDialogue([dCarpet]);
+    setExCarpet(false);
   };
 
   const handleKitchen = () => {
-    setDialogues((prevDialogues) => [...prevDialogues, dKitchen]);
+    startNewDialogue([dKitchen]);
+    setExKitchen(false);
   };
 
   const handleCupboard2 = () => {
-    setDialogues((prevDialogues) => [...prevDialogues, dCupboard2]);
+    startNewDialogue([dCupboard2]);
   };
 
   const handleCupboard1 = () => {
-    setDialogues((prevDialogues) => [...prevDialogues, dCupboard1]);
+    startNewDialogue(dCupboard1);
+    setExCupboard(false);
+    setExKitchen(false);
+    setExCarpet(false);
+    setExTable(false);
   };
+
+  useEffect(() => {
+    if (slime?.status === "alive" && isNotHidden) {
+      setExCupboard(false);
+      setExKitchen(false);
+      setExCarpet(false);
+      setExTable(false);
+    }
+  }, [slime, slime?.status, isNotHidden]);
+
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout | null = null;
+
+    const startSlimeCheckInterval = async () => {
+      intervalId = setInterval(async () => {
+        if (!player?.id) {
+          clearInterval(intervalId as NodeJS.Timeout);
+          return;
+        }
+        if (isNotHidden === false && exCupboard === false) {
+          const response = await fetch(
+            `${String(import.meta.env.VITE_API_URL)}/api/slime/status_alive/${player?.id}`,
+            {
+              method: "PUT",
+            },
+          );
+
+          if (response.ok) {
+            await fetchSlime();
+            setIsNotHidden(true);
+            if (intervalId) {
+              clearInterval(intervalId as NodeJS.Timeout);
+            }
+          } else {
+            console.error("Failed to update slime status");
+          }
+        }
+      }, 7500);
+    };
+
+    if (!isNotHidden && !exCupboard && player?.id) {
+      startSlimeCheckInterval();
+    }
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId as NodeJS.Timeout);
+      }
+    };
+  }, [isNotHidden, exCupboard, player?.id, fetchSlime]);
 
   useEffect(() => {
     let i = 0;
     let typingInterval: NodeJS.Timeout;
 
-    if (currentDialogueIndex <= dialogues.length) {
+    if (currentDialogueIndex < dialogues.length) {
       const fullText = dialogues[currentDialogueIndex];
       setTyping(true);
 
@@ -56,15 +133,14 @@ export default function Dialogue() {
         if (i < fullText.length) {
           setText((prevText) => prevText + fullText.charAt(i));
           i++;
-          setTyping(false);
         } else {
           clearInterval(typingInterval);
           setTyping(false);
         }
       }, speed);
-    }
 
-    return () => clearInterval(typingInterval);
+      return () => clearInterval(typingInterval);
+    }
   }, [currentDialogueIndex, dialogues]);
 
   useEffect(() => {
@@ -72,7 +148,7 @@ export default function Dialogue() {
       const timer = setTimeout(() => {
         setCurrentDialogueIndex((prevIndex) => prevIndex + 1);
         setText("");
-      }, 2500);
+      }, 2000);
       return () => clearTimeout(timer);
     }
   }, [typing, currentDialogueIndex, dialogues]);
@@ -97,6 +173,10 @@ export default function Dialogue() {
         handleKitchen={handleKitchen}
         handleCupboard2={handleCupboard2}
         handleCupboard1={handleCupboard1}
+        exTable={exTable}
+        exCarpet={exCarpet}
+        exCupboard={exCupboard}
+        exKitchen={exKitchen}
       />
     </>
   );

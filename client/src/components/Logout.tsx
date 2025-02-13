@@ -1,11 +1,15 @@
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/authContext";
 import styles from "../styles/Form.module.css";
 
 export default function Logout() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const handleLogout = () => {
     localStorage.clear();
+    sessionStorage.clear();
+    logout();
     navigate("/login");
   };
 

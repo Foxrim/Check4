@@ -177,6 +177,17 @@
     transform: translate(-50%, 600%);
     animation: exclamCupboard1 2s infinite linear;
   }
+
+  .exclamKeepSlime {
+    position: absolute;
+    height: 5rem;
+    width: 5rem;
+    z-index: 10;
+    top: 47%;
+    left: 56%;
+    transform: translate(-50%, 200%);
+    animation: exclamCupboard1 2s infinite linear;
+  }
 }
 
 @keyframes exclamCupboard1 {

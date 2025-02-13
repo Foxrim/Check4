@@ -32,6 +32,13 @@ export default function Dialogue() {
     "   *tremble* ",
     "   Il semble être innofensif et appeuré, pourquoi ne pas le garder ? ",
   ]);
+  const [dHaveKeepSlime] = useState([
+    "   Super ! ",
+    "   Il semble avoir compris que vous ne lui vouliez aucun mal et ne tremble plus. ",
+    "   *zieute*zieute* ",
+    "   Il vous observe ? ",
+    "   Mmmh... Attendrait-il quelque chose de votre part ? ",
+  ]);
   const [dCupboard2] = useState(
     "   Il n'y a pas encore de slime caché derrière j'espère ?",
   );
@@ -83,6 +90,15 @@ export default function Dialogue() {
   const handleKeepSlime = useCallback(() => {
     startNewDialogue(dKeepSlime);
   }, [dKeepSlime, startNewDialogue]);
+
+  useEffect(() => {
+    const keep = sessionStorage.getItem("KeepYes") === "yes";
+
+    if (keep) {
+      startNewDialogue(dHaveKeepSlime);
+      sessionStorage.removeItem("KeepYes");
+    }
+  });
 
   useEffect(() => {
     if (slime?.status === "hidden") {

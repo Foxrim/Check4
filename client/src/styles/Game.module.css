@@ -24,6 +24,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-30%, -30%);
+    z-index: 20;
 
     .slimeContainer {
       height: 9vw;
@@ -37,22 +38,99 @@
   }
 }
 
-.grey {
-  background-color: var(--slime-color-grey);
-  border: solid var(--slime-border-grey) 2px;
+.dialogue {
+  height: 80vh;
+  width: 28rem;
+  border-radius: 50px;
+  border: var(--actif) solid 4px;
+  position: absolute;
+  top: 2.5rem;
+  left: 2rem;
+  padding: 0 1rem 0 2rem;
+
+  h2 {
+    text-align: center;
+  }
+  div {
+    height: 69vh;
+    overflow: scroll;
+    padding-right: .5rem;
+
+    p {
+      border: var(--actif) solid 4px;
+      background-color: transparent;
+      border-radius: 20px;
+      padding: 0 1rem;
+      max-width: 100%;
+      cursor: default;
+    }
+  }
+
+  div::-webkit-scrollbar {
+    width: 8px;
+    height: 0;
+  }
+
+  div::-webkit-scrollbar-track {
+    background: #ffffff;
+    border-radius: 50px;
+  }
+
+  div::-webkit-scrollbar-thumb {
+    background: #000000;
+    border-radius: 4px;
+  }
 }
 
-.red {
-  background-color: var(--slime-color-red);
-  border: solid var(--slime-border-red) 2px;
-}
+.furniture {
+  width: 55rem;
+  height: 43rem;
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
-.green {
-  background-color: var(--slime-color-green);
-  border: solid var(--slime-border-green) 2px;
-}
+  .kitchen {
+    position: absolute;
+    height: 8rem;
+    width: 11.5rem;
+    z-index: 10;
+    top: 29%;
+    left: 89%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+  }
 
-.blue {
-  background-color: var(--slime-color-blue);
-  border: solid var(--slime-border-blue) 2px;
+  .cupboard {
+    position: absolute;
+    height: 11.5rem;
+    width: 11.5rem;
+    z-index: 10;
+    top: 25%;
+    left: 11%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+  }
+
+  .carpet {
+    position: absolute;
+    height: 5.5rem;
+    width: 11.5rem;
+    z-index: 10;
+    top: 94%;
+    left: 39%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+  }
+
+  .table {
+    position: absolute;
+    height: 10.5rem;
+    width: 12.5rem;
+    z-index: 10;
+    top: 57%;
+    left: 55.5%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+  }
 }

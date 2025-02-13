@@ -8,6 +8,7 @@ import SlimeKeep from "../components/SlimeKeep";
 import SlimeName from "../components/SlimeName";
 import { useSlime } from "../contexts/SlimeContext";
 
+import Dialogue from "../components/Dialogue";
 import styles from "../styles/Game.module.css";
 
 export default function GamePage() {
@@ -50,6 +51,8 @@ export default function GamePage() {
           )}
         </figure>
       </section>
+
+      <Dialogue />
 
       <Logout />
       <PlayerPseudo />

@@ -36,13 +36,16 @@ export default function GamePage() {
         <figure className={styles.house}>
           <img src={house} alt="votre maison" />
           {alive && (
-            <div
-              onClick={
-                quest1 ? handleKeepSlime : !quest3 ? handleColor : undefined
-              }
-              onKeyDown={handleKeepSlime}
-            >
-              <Slime />
+            <div className={styles.table}>
+              <figure
+                className={styles.slimeContainer}
+                onClick={
+                  quest1 ? handleKeepSlime : !quest3 ? handleColor : undefined
+                }
+                onKeyDown={handleKeepSlime}
+              >
+                <Slime />
+              </figure>
             </div>
           )}
         </figure>

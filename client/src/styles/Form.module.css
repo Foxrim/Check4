@@ -16,6 +16,10 @@
     margin-bottom: 5rem;
   }
 
+  p {
+    cursor: default;
+  }
+
   form {
     display: flex;
     flex-direction: column;
@@ -25,6 +29,7 @@
     button,
     label {
       background-color: transparent;
+      backdrop-filter: blur(15px);
       border-radius: 50px;
       border: var(--actif) solid 4px;
       height: 4rem;
@@ -34,6 +39,7 @@
 
     input {
       padding-left: 1.5rem;
+      background-color: var(--background-input);
     }
 
     label {
@@ -133,7 +139,7 @@
 
 .errorMessageName {
   position: absolute;
-  top: 44.5%;
+  top: 48%;
   left: 50%;
   transform: translate(-50%, 75%);
   cursor: default;

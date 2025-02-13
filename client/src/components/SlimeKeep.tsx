@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSlime } from "../contexts/SlimeContext";
 import { useAuth } from "../contexts/authContext";
 import styles from "../styles/Form.module.css";
 
@@ -15,13 +16,14 @@ export default function SlimeKeep({
 }: SlimeKeepProps) {
   const [keepSlime, setKeepSlime] = useState("");
   const { player } = useAuth();
+  const { fetchSlime } = useSlime();
 
   const handleKeepSlimeOrNot = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setKeepSlime(value);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (keepSlime !== "yes" && keepSlime !== "no") {
@@ -30,15 +32,19 @@ export default function SlimeKeep({
 
     try {
       if (keepSlime === "no") {
-        fetch(
+        const response = await fetch(
           `${import.meta.env.VITE_API_URL}/api/slime/status/${player?.id}`,
           {
             method: "PUT",
           },
         );
-        setQuest1(false);
-        setChooseKeepSlime(false);
-        alert("Vous avez tuer le slime et prit 2 points d'expérience");
+
+        if (response.ok) {
+          setQuest1(false);
+          setChooseKeepSlime(false);
+          fetchSlime();
+          alert("Vous avez tuer le slime et prit 2 points d'expérience");
+        }
       }
 
       if (keepSlime === "yes") {

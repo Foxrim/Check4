@@ -50,26 +50,38 @@ class PlayerRepository {
 
   async readAll() {
     const [rows] = await databaseClient.query<Rows>(
-      `SELECT p.*, s.*, q.*
+      `SELECT p.*, s.*, s.player_id slimePlayerID, q.*, q.player_id questPlayerID
        FROM player p
        LEFT JOIN slime s ON s.player_id = p.id
        LEFT JOIN quest q ON q.player_id = p.id`,
     );
 
-    return rows.map((row) => ({
-      id: row.id,
-      pseudo: row.pseudo,
-      slime: {
-        name: row.name,
-        color: row.color,
-        status: row.status,
-      },
-      quest: {
-        keep_slime: row.keep_slime,
-        choose_name: row.choose_name,
-        choose_color: row.choose_color,
-      },
-    })) as PlayerWithRelations[];
+    return rows.map((row) => {
+      const slime = row.slimePlayerID
+        ? {
+            name: row.name,
+            color: row.color,
+            status: row.status,
+            slimePlayerID: row.slimePlayerID,
+          }
+        : null;
+
+      const quest = row.questPlayerID
+        ? {
+            keep_slime: row.keep_slime,
+            choose_name: row.choose_name,
+            choose_color: row.choose_color,
+            questPlayerID: row.questPlayerID,
+          }
+        : null;
+
+      return {
+        id: row.id,
+        pseudo: row.pseudo,
+        slime: slime,
+        quest: quest,
+      };
+    }) as PlayerWithRelations[];
   }
 
   async read(id: number) {

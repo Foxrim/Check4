@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useQuest } from "../contexts/QuestContext";
 import { useSlime } from "../contexts/SlimeContext";
 import { useAuth } from "../contexts/authContext";
 import styles from "../styles/Form.module.css";
@@ -9,6 +10,7 @@ export default function SlimeName() {
   const [error, setError] = useState("");
   const { slime, fetchSlime } = useSlime();
   const { player } = useAuth();
+  const { quest } = useQuest();
 
   useEffect(() => {
     fetchSlime();
@@ -45,6 +47,17 @@ export default function SlimeName() {
         setRenameSlime(false);
         fetchSlime();
         sessionStorage.setItem("newName", name);
+        if (!quest?.choose_name) {
+          const response = await fetch(
+            `${import.meta.env.VITE_API_URL}/api/quest/choose_name/${player?.id}`,
+            {
+              method: "PUT",
+            },
+          );
+          if (response.ok) {
+            alert("yes");
+          }
+        }
       }
 
       if (!response.ok) {

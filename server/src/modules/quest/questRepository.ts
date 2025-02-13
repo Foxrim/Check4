@@ -5,6 +5,7 @@ import type { Result, Rows } from "../../../database/client";
 type QuestProps = {
   id: number;
   keep_slime: boolean;
+  choose_name: boolean;
   choose_color: boolean;
   player_id: number;
 };

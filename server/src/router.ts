@@ -28,6 +28,11 @@ router.put(
 );
 router.delete("/api/slime/:player_id", slimeActions.destroy);
 
+import questActions from "./modules/quest/questActions";
+
+router.put("/api/quest/keep_slime/:player_id", questActions.editKeepSlime);
+router.put("/api/quest/choose_color/:player_id", questActions.editChooseColor);
+
 /* ************************************************************************* */
 
 export default router;

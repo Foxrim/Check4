@@ -55,6 +55,10 @@ export default function SlimeKeep({ handleModal }: SlimeKeepProps) {
           fetchQuest();
           alert("Vous avez décidé de garder le slime");
         }
+
+        if (!response?.ok) {
+          throw new Error(`HTTP error! status: ${response?.status}`);
+        }
       }
     } catch (error) {
       console.error("An error occurred:", error);

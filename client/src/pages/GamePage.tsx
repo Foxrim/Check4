@@ -21,19 +21,25 @@ export default function GamePage() {
 
   useEffect(() => {
     const updateQuestState = async () => {
-      await fetchQuest();
-
-      if (quest) {
-        setKeepSlime(quest.keep_slime ? "TRUE" : "FALSE");
-        setChooseColor(quest.choose_color ? "TRUE" : "FALSE");
-      } else {
-        setKeepSlime("FALSE");
-        setChooseColor("FALSE");
+      try {
+        await fetchQuest();
+      } catch (error) {
+        console.error("Failed to update quest state:", error);
       }
     };
 
     updateQuestState();
-  }, [fetchQuest, quest]);
+  }, [fetchQuest]);
+
+  useEffect(() => {
+    if (quest) {
+      setKeepSlime(quest.keep_slime ? "TRUE" : "FALSE");
+      setChooseColor(quest.choose_color ? "TRUE" : "FALSE");
+    } else {
+      setKeepSlime("FALSE");
+      setChooseColor("FALSE");
+    }
+  }, [quest]);
 
   const alive = slime?.status === "alive";
 

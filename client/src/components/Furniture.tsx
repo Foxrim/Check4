@@ -1,4 +1,7 @@
+import { useEffect, useState } from "react";
 import exclam from "../../public/point-exclamation.png";
+import { useQuest } from "../contexts/QuestContext";
+import { useSlime } from "../contexts/SlimeContext";
 import styles from "../styles/Game.module.css";
 
 type FurnitureProps = {
@@ -24,6 +27,24 @@ export default function Furniture({
   exCupboard,
   exKitchen,
 }: FurnitureProps) {
+  const [keepSlime, setKeepSlime] = useState("");
+  const { quest, fetchQuest } = useQuest();
+  const { slime } = useSlime();
+
+  useEffect(() => {
+    const updateQuestState = async () => {
+      await fetchQuest();
+
+      if (quest) {
+        setKeepSlime(quest.keep_slime ? "TRUE" : "FALSE");
+      } else {
+        setKeepSlime("FALSE");
+      }
+    };
+
+    updateQuestState();
+  }, [fetchQuest, quest]);
+
   return (
     <div className={styles.furniture}>
       <span
@@ -67,6 +88,13 @@ export default function Furniture({
       {exTable && (
         <img
           className={styles.exclamTable}
+          src={exclam}
+          alt="point d'exclamation"
+        />
+      )}
+      {!exCupboard && keepSlime === "FALSE" && slime?.status === "alive" && (
+        <img
+          className={styles.exclamKeepSlime}
           src={exclam}
           alt="point d'exclamation"
         />

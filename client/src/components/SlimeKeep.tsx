@@ -1,21 +1,17 @@
 import { useState } from "react";
+import { useQuest } from "../contexts/QuestContext";
 import { useSlime } from "../contexts/SlimeContext";
 import { useAuth } from "../contexts/authContext";
 import styles from "../styles/Form.module.css";
 
 type SlimeKeepProps = {
-  setChooseKeepSlime: React.Dispatch<React.SetStateAction<boolean>>;
-  setQuest1: React.Dispatch<React.SetStateAction<boolean>>;
-  setQuest2: React.Dispatch<React.SetStateAction<boolean>>;
+  handleModal: () => void;
 };
 
-export default function SlimeKeep({
-  setQuest1,
-  setQuest2,
-  setChooseKeepSlime,
-}: SlimeKeepProps) {
+export default function SlimeKeep({ handleModal }: SlimeKeepProps) {
   const [keepSlime, setKeepSlime] = useState("");
   const { player } = useAuth();
+  const { fetchQuest } = useQuest();
   const { fetchSlime } = useSlime();
 
   const handleKeepSlimeOrNot = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,18 +36,25 @@ export default function SlimeKeep({
         );
 
         if (response.ok) {
-          setQuest1(false);
-          setChooseKeepSlime(false);
           fetchSlime();
+          fetchQuest();
           alert("Vous avez tuer le slime et prit 2 points d'expérience");
         }
       }
 
       if (keepSlime === "yes") {
-        setQuest1(false);
-        setChooseKeepSlime(false);
-        alert("Vous avez décidé de garder le slime");
-        setQuest2(true);
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/quest/keep_slime/${player?.id}`,
+          {
+            method: "PUT",
+          },
+        );
+
+        if (response.ok) {
+          handleModal();
+          fetchQuest();
+          alert("Vous avez décidé de garder le slime");
+        }
       }
     } catch (error) {
       console.error("An error occurred:", error);

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import house from "../../public/house.png";
 import Logout from "../components/Logout";
 import PlayerPseudo from "../components/PlayerPseudo";
@@ -8,28 +7,39 @@ import SlimeKeep from "../components/SlimeKeep";
 import SlimeName from "../components/SlimeName";
 import { useSlime } from "../contexts/SlimeContext";
 
+import { useEffect, useState } from "react";
 import Dialogue from "../components/Dialogue";
+import { useQuest } from "../contexts/QuestContext";
 import styles from "../styles/Game.module.css";
 
 export default function GamePage() {
-  const [chooseKeepSlime, setChooseKeepSlime] = useState<boolean>(false);
-  const [chooseColor, setChooseColor] = useState<boolean>(false);
   const { slime } = useSlime();
-  //QUEST
-  //Accès aux quest que si elle sont true. Si elles sont false, alors elles sont déjà terminées
-  const [quest1, setQuest1] = useState<boolean>(true);
-  const [quest2, setQuest2] = useState<boolean>(false);
-  const [quest3, setQuest3] = useState<boolean>(false);
+  const { quest, fetchQuest } = useQuest();
+  const [modal, setModal] = useState<boolean>(false);
+  const [keepSlime, setKeepSlime] = useState("");
+  const [chooseColor, setChooseColor] = useState("");
 
-  const handleKeepSlime = () => {
-    setChooseKeepSlime(true);
-  };
+  useEffect(() => {
+    const updateQuestState = async () => {
+      await fetchQuest();
 
-  const handleColor = () => {
-    setChooseColor(true);
-  };
+      if (quest) {
+        setKeepSlime(quest.keep_slime ? "TRUE" : "FALSE");
+        setChooseColor(quest.choose_color ? "TRUE" : "FALSE");
+      } else {
+        setKeepSlime("FALSE");
+        setChooseColor("FALSE");
+      }
+    };
+
+    updateQuestState();
+  }, [fetchQuest, quest]);
 
   const alive = slime?.status === "alive";
+
+  const handleModal = () => {
+    setModal((prev) => !prev);
+  };
 
   return (
     <>
@@ -40,10 +50,8 @@ export default function GamePage() {
             <div className={styles.table}>
               <figure
                 className={styles.slimeContainer}
-                onClick={
-                  quest1 ? handleKeepSlime : !quest3 ? handleColor : undefined
-                }
-                onKeyDown={handleKeepSlime}
+                onClick={handleModal}
+                onKeyDown={handleModal}
               >
                 <Slime />
               </figure>
@@ -57,17 +65,13 @@ export default function GamePage() {
       <Logout />
       <PlayerPseudo />
 
-      {quest1 && chooseKeepSlime && (
-        <SlimeKeep
-          setQuest1={setQuest1}
-          setChooseKeepSlime={setChooseKeepSlime}
-          setQuest2={setQuest2}
-        />
+      {modal && keepSlime === "FALSE" && (
+        <SlimeKeep handleModal={handleModal} />
       )}
 
-      {quest2 && <SlimeName />}
-      {!quest3 && chooseColor && (
-        <SlimeColor setQuest3={setQuest3} setChooseColor={setChooseColor} />
+      {keepSlime === "TRUE" && <SlimeName />}
+      {modal && keepSlime === "TRUE" && chooseColor === "FALSE" && (
+        <SlimeColor handleModal={handleModal} />
       )}
     </>
   );

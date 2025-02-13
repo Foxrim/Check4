@@ -4,6 +4,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import App from "./App";
 import AuthPlayers from "./components/AuthPlayers";
+import { QuestProvider } from "./contexts/QuestContext";
 import { SlimeProvider } from "./contexts/SlimeContext";
 import { AuthProvider } from "./contexts/authContext";
 import GamePage from "./pages/GamePage";
@@ -46,7 +47,9 @@ createRoot(rootElement).render(
   <StrictMode>
     <AuthProvider>
       <SlimeProvider>
-        <RouterProvider router={router} />
+        <QuestProvider>
+          <RouterProvider router={router} />
+        </QuestProvider>
       </SlimeProvider>
     </AuthProvider>
   </StrictMode>,

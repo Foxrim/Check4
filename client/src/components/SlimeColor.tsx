@@ -3,15 +3,11 @@ import { useSlime } from "../contexts/SlimeContext";
 import { useAuth } from "../contexts/authContext";
 import styles from "../styles/Form.module.css";
 
-type SlimeColorProps = {
-  setChooseColor: React.Dispatch<React.SetStateAction<boolean>>;
-  setQuest3: React.Dispatch<React.SetStateAction<boolean>>;
+type SlimeProps = {
+  handleModal: () => void;
 };
 
-export default function SlimeColor({
-  setQuest3,
-  setChooseColor,
-}: SlimeColorProps) {
+export default function SlimeColor({ handleModal }: SlimeProps) {
   const [colorSlime, setColorSlime] = useState("");
   const { player } = useAuth();
   const { slime, fetchSlime } = useSlime();
@@ -42,9 +38,16 @@ export default function SlimeColor({
         },
       );
       if (response.ok) {
-        fetchSlime();
-        setChooseColor(false);
-        setQuest3(false);
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/quest/choose_color/${player?.id}`,
+          {
+            method: "PUT",
+          },
+        );
+        if (response.ok) {
+          handleModal();
+          fetchSlime();
+        }
       }
     } catch (error) {
       console.error("An error occurred:", error);

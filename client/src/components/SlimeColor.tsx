@@ -55,6 +55,7 @@ export default function SlimeColor({
   return (
     <div className={styles.form}>
       <h1>Quel sera la couleur de {slime?.name} ?</h1>
+      <p>Ce choix sera définitif !</p>
       <form onSubmit={handleSubmit}>
         <label
           className={colorSlime === "red" ? styles.color : ""}

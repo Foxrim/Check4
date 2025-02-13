@@ -50,6 +50,14 @@ export default function HomePage() {
   return (
     <div className={styles.form}>
       <NavLink
+        to="/home"
+        className={`material-symbols-outlined ${styles.createAccount}`}
+        type="button"
+      >
+        person_add
+        <p>Créer un compte</p>
+      </NavLink>
+      <NavLink
         to="/login"
         className={`material-symbols-outlined ${styles.login}`}
         type="button"

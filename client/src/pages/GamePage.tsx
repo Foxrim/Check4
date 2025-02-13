@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import house from "../../public/house.png";
 import Logout from "../components/Logout";
 import PlayerPseudo from "../components/PlayerPseudo";
 import Slime from "../components/Slime";
@@ -7,10 +8,12 @@ import SlimeKeep from "../components/SlimeKeep";
 import SlimeName from "../components/SlimeName";
 import { useSlime } from "../contexts/SlimeContext";
 
+import styles from "../styles/Game.module.css";
+
 export default function GamePage() {
   const [chooseKeepSlime, setChooseKeepSlime] = useState<boolean>(false);
   const [chooseColor, setChooseColor] = useState<boolean>(false);
-  const { slime, fetchSlime } = useSlime();
+  const { slime } = useSlime();
   //QUEST
   //Accès aux quest que si elle sont true. Si elles sont false, alors elles sont déjà terminées
   const [quest1, setQuest1] = useState<boolean>(true);
@@ -25,23 +28,25 @@ export default function GamePage() {
     setChooseColor(true);
   };
 
-  useEffect(() => {
-    fetchSlime();
-  }, [fetchSlime]);
-
   const alive = slime?.status === "alive";
 
   return (
     <>
-      <h2>page</h2>
-      {alive && (
-        <div
-          onClick={quest1 ? handleKeepSlime : !quest3 ? handleColor : undefined}
-          onKeyDown={handleKeepSlime}
-        >
-          <Slime />
-        </div>
-      )}
+      <section className={styles.backSite}>
+        <figure className={styles.house}>
+          <img src={house} alt="votre maison" />
+          {alive && (
+            <div
+              onClick={
+                quest1 ? handleKeepSlime : !quest3 ? handleColor : undefined
+              }
+              onKeyDown={handleKeepSlime}
+            >
+              <Slime />
+            </div>
+          )}
+        </figure>
+      </section>
 
       <Logout />
       <PlayerPseudo />

@@ -8,6 +8,7 @@ type Player = {
 type AuthContextProps = {
   player: Player | null;
   isAuth: boolean;
+  errorMessage: string;
   login: (pseudo: string) => Promise<Player | null>;
   logout: () => void;
 };
@@ -27,6 +28,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [player, setPlayer] = useState<Player | null>(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const isAuth = player !== null;
 
@@ -42,7 +44,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       );
 
       if (!response.ok) {
-        throw new Error("Identifiants erronés");
+        const messageError = await response.json();
+        setErrorMessage(
+          messageError.message ||
+            messageError.error ||
+            "An unknown error occurred",
+        );
       }
 
       const data = await response.json();
@@ -62,7 +69,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       return loggedPlayer;
     } catch (error) {
       console.error("Login raté : ", error);
-      alert("Identifiants erronés !");
       return null;
     }
   };
@@ -73,7 +79,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   return (
-    <AuthContext.Provider value={{ player, isAuth, login, logout }}>
+    <AuthContext.Provider
+      value={{ player, isAuth, errorMessage, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

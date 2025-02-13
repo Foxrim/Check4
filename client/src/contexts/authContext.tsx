@@ -3,6 +3,10 @@ import { createContext, useContext, useState } from "react";
 type Player = {
   id: number;
   pseudo: string;
+  quest: {
+    keep_slime: boolean;
+    choose_color: boolean;
+  };
 };
 
 type AuthContextProps = {
@@ -57,6 +61,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const loggedPlayer = {
         id: data[0].id,
         pseudo: data[0].pseudo,
+        quest: {
+          keep_slime: data[0].keep_slime,
+          choose_color: data[0].choose_color,
+        },
       };
 
       setPlayer(loggedPlayer);

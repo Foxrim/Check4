@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSlime } from "../contexts/SlimeContext";
 import { useAuth } from "../contexts/authContext";
 import styles from "../styles/Game.module.css";
@@ -17,6 +17,8 @@ export default function Dialogue() {
   const [exKitchen, setExKitchen] = useState<boolean>(true);
   const [isNotHidden, setIsNotHidden] = useState<boolean>(false);
 
+  const [spawnSlime, setSpawnSlime] = useState("");
+
   const [dialogues, setDialogues] = useState<string[]>(initialDialogues);
   const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
   const [text, setText] = useState("");
@@ -24,6 +26,11 @@ export default function Dialogue() {
     "   !!? ",
     "   *bouge* ",
     "   *bouge*bouge*bouge* ",
+  ]);
+  const [dKeepSlime] = useState([
+    "   Un slime était caché ici !? ",
+    "   *tremble* ",
+    "   Il semble être innofensif et appeuré, pourquoi ne pas le garder ? ",
   ]);
   const [dCupboard2] = useState(
     "   Il n'y a pas encore de slime caché derrière j'espère ?",
@@ -39,11 +46,11 @@ export default function Dialogue() {
   const { player } = useAuth();
   const { slime, fetchSlime } = useSlime();
 
-  const startNewDialogue = (newDialogues: string[]) => {
+  const startNewDialogue = useCallback((newDialogues: string[]) => {
     setDialogues(newDialogues);
     setCurrentDialogueIndex(0);
     setText("");
-  };
+  }, []);
 
   const handleTable = () => {
     startNewDialogue([dTable]);
@@ -66,20 +73,34 @@ export default function Dialogue() {
 
   const handleCupboard1 = () => {
     startNewDialogue(dCupboard1);
+    setSpawnSlime("SPAWN");
     setExCupboard(false);
     setExKitchen(false);
     setExCarpet(false);
     setExTable(false);
   };
 
+  const handleKeepSlime = useCallback(() => {
+    startNewDialogue(dKeepSlime);
+  }, [dKeepSlime, startNewDialogue]);
+
   useEffect(() => {
-    if (slime?.status === "alive" && isNotHidden === true) {
+    if (slime?.status === "hidden") {
+      setExCupboard(true);
+      setExKitchen(true);
+      setExCarpet(true);
+      setExTable(true);
+    }
+  }, [slime, slime?.status]);
+
+  useEffect(() => {
+    if (slime?.status === "alive") {
       setExCupboard(false);
       setExKitchen(false);
       setExCarpet(false);
       setExTable(false);
     }
-  }, [slime, slime?.status, isNotHidden]);
+  }, [slime, slime?.status]);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null;
@@ -90,7 +111,7 @@ export default function Dialogue() {
           clearInterval(intervalId as NodeJS.Timeout);
           return;
         }
-        if (isNotHidden === false && exCupboard === false) {
+        if (spawnSlime === "SPAWN") {
           const response = await fetch(
             `${String(import.meta.env.VITE_API_URL)}/api/slime/status_alive/${player?.id}`,
             {
@@ -101,6 +122,7 @@ export default function Dialogue() {
           if (response.ok) {
             await fetchSlime();
             setIsNotHidden(true);
+            handleKeepSlime();
             if (intervalId) {
               clearInterval(intervalId as NodeJS.Timeout);
             }
@@ -119,7 +141,14 @@ export default function Dialogue() {
         clearInterval(intervalId as NodeJS.Timeout);
       }
     };
-  }, [isNotHidden, exCupboard, player?.id, fetchSlime]);
+  }, [
+    isNotHidden,
+    exCupboard,
+    player?.id,
+    fetchSlime,
+    handleKeepSlime,
+    spawnSlime,
+  ]);
 
   useEffect(() => {
     let i = 0;

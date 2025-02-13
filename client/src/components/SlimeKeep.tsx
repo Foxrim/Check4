@@ -38,7 +38,8 @@ export default function SlimeKeep({ handleModal }: SlimeKeepProps) {
         if (response.ok) {
           fetchSlime();
           fetchQuest();
-          alert("Vous avez tuer le slime et prit 2 points d'expérience");
+          handleModal();
+          sessionStorage.setItem("KeepNo", keepSlime);
         }
       }
 

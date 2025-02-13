@@ -5,11 +5,38 @@ import styles from "../styles/Game.module.css";
 import Furniture from "./Furniture";
 
 export default function Dialogue() {
-  const initialDialogues = [
-    "   Bienvenue dans votre nouvelle maison ! ",
-    "   J'espère que vous vous y plairez. ",
-    "   N'hésitez pas à explorer les environs. ",
-  ];
+  const { player } = useAuth();
+  const { slime, fetchSlime } = useSlime();
+
+  const [dialogues, setDialogues] = useState([""]);
+
+  useEffect(() => {
+    if (slime?.status === "hidden") {
+      setDialogues([
+        "   Bienvenue dans votre nouvelle maison ! ",
+        "   J'espère que vous vous y plairez. ",
+        "   N'hésitez pas à explorer les environs. ",
+      ]);
+    } else if (slime?.status === "alive") {
+      setDialogues([
+        "   Vous êtes de retour ? ",
+        "   Votre slime vous attendais. ",
+        "   Pensez à vous en occuper afin qu'il ne se sente pas seul de nouveau. ",
+      ]);
+    } else if (slime?.status === "dead") {
+      setDialogues([
+        "   Vous revoilà... ",
+        "   ... ",
+        "   Si vous trouvez cette maison si vide c'est par ce que le slime qui y vivait était mort par votre faute ! ",
+      ]);
+    } else {
+      setDialogues([
+        "   BBienvenue dans votre nouvelle maison ! ",
+        "   J'espère que vous vous y plairez. ",
+        "   N'hésitez pas à explorer les environs. ",
+      ]);
+    }
+  }, [slime?.status]);
 
   const [exTable, setExTable] = useState<boolean>(true);
   const [exCarpet, setExCarpet] = useState<boolean>(true);
@@ -19,7 +46,6 @@ export default function Dialogue() {
 
   const [spawnSlime, setSpawnSlime] = useState("");
 
-  const [dialogues, setDialogues] = useState<string[]>(initialDialogues);
   const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
   const [text, setText] = useState("");
   const [dCupboard1] = useState([
@@ -39,6 +65,22 @@ export default function Dialogue() {
     "   Il vous observe ? ",
     "   Mmmh... Attendrait-il quelque chose de votre part ? ",
   ]);
+  const [dDontHaveKeepSlime] = useState([
+    "   *fiouuuu* ",
+    "   Vous vous êtes débarassé de ce pauvre slime appeuré en le jetant par la fenêtre ! ",
+    "   Hé bien... Vous êtes désormais seul dans cette grande maison. ",
+    "   Vous allez pouvoir profiter du reste de vos jours dans cette grande maison, seul. ",
+    "   Votre choix était de vivre dans le calme seul après tout. ",
+    "   ... ",
+    "   .............................. ",
+    "   Je me demande s'il a tenu le choc... ",
+    "   Vous êtes sûre que c’était le bon choix ? ",
+    "   Vous devez en être sûre pour avoir balancer ce pauvre petit slime térrorisé  par la fenêtre. ",
+    "   Bon bah je vais vous laisser alors ! ",
+    "   J’y vais hein ! ",
+    "   *zieute* ",
+    "   ... ",
+  ]);
   const [dCupboard2] = useState(
     "   Il n'y a pas encore de slime caché derrière j'espère ?",
   );
@@ -49,9 +91,6 @@ export default function Dialogue() {
   const [dTable] = useState("   C'est une table... Rien de spécial quoi.");
   const speed = 50;
   const [typing, setTyping] = useState(false);
-
-  const { player } = useAuth();
-  const { slime, fetchSlime } = useSlime();
 
   const startNewDialogue = useCallback((newDialogues: string[]) => {
     setDialogues(newDialogues);
@@ -101,6 +140,15 @@ export default function Dialogue() {
   });
 
   useEffect(() => {
+    const dontKeep = sessionStorage.getItem("KeepNo") === "no";
+
+    if (dontKeep) {
+      startNewDialogue(dDontHaveKeepSlime);
+      sessionStorage.removeItem("KeepNo");
+    }
+  });
+
+  useEffect(() => {
     if (slime?.status === "hidden") {
       setExCupboard(true);
       setExKitchen(true);
@@ -110,7 +158,7 @@ export default function Dialogue() {
   }, [slime, slime?.status]);
 
   useEffect(() => {
-    if (slime?.status === "alive") {
+    if (slime?.status === "alive" || slime?.status === "dead") {
       setExCupboard(false);
       setExKitchen(false);
       setExCarpet(false);
@@ -127,7 +175,7 @@ export default function Dialogue() {
           clearInterval(intervalId as NodeJS.Timeout);
           return;
         }
-        if (spawnSlime === "SPAWN") {
+        if (spawnSlime === "SPAWN" && slime?.status !== "dead") {
           const response = await fetch(
             `${String(import.meta.env.VITE_API_URL)}/api/slime/status_alive/${player?.id}`,
             {
@@ -164,6 +212,7 @@ export default function Dialogue() {
     fetchSlime,
     handleKeepSlime,
     spawnSlime,
+    slime?.status,
   ]);
 
   useEffect(() => {

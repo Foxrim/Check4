@@ -30,6 +30,9 @@ export default function Furniture({
   const [keepSlime, setKeepSlime] = useState("");
   const [renameSlime, setRenameSlime] = useState("");
   const [changeColor, setChangeColor] = useState("");
+
+  const newColorQuest = sessionStorage.getItem("newColorQuest");
+
   const { quest, fetchQuest } = useQuest();
   const { slime } = useSlime();
 
@@ -121,7 +124,7 @@ export default function Furniture({
             alt="point d'exclamation"
           />
         )}
-      {renameSlime === "TRUE" && changeColor === "FALSE" && (
+      {renameSlime === "TRUE" && changeColor === "FALSE" && newColorQuest && (
         <img
           className={styles.exclamKeepSlime}
           src={exclam}

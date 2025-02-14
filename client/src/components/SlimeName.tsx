@@ -55,7 +55,7 @@ export default function SlimeName() {
             },
           );
           if (response.ok) {
-            alert("yes");
+            sessionStorage.setItem("newColorStart", name);
           }
         }
       }

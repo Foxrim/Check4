@@ -19,6 +19,14 @@ export default function GamePage() {
   const [keepSlime, setKeepSlime] = useState("");
   const [chooseName, setChooseName] = useState("");
   const [chooseColor, setChooseColor] = useState("");
+  const [colorIsChoose, setColorIsChoose] = useState<boolean>(false);
+  const [killSlime, setKillSlime] = useState<boolean>(true);
+
+  const newColorQuest = sessionStorage.getItem("newColorQuest");
+
+  const handleKill = () => {
+    setKillSlime((prev) => !prev);
+  };
 
   useEffect(() => {
     const updateQuestState = async () => {
@@ -49,6 +57,10 @@ export default function GamePage() {
     setModal((prev) => !prev);
   };
 
+  const handleColorIsChoose = () => {
+    setColorIsChoose((prev) => !prev);
+  };
+
   return (
     <>
       <section className={styles.backSite}>
@@ -68,20 +80,30 @@ export default function GamePage() {
         </figure>
       </section>
 
-      <Dialogue />
+      <Dialogue
+        colorIsChoose={colorIsChoose}
+        handleColorIsChoose={handleColorIsChoose}
+        killSlime={killSlime}
+      />
 
       <Logout />
       <PlayerPseudo />
 
       {modal && keepSlime === "FALSE" && (
-        <SlimeKeep handleModal={handleModal} />
+        <SlimeKeep handleModal={handleModal} handleKill={handleKill} />
       )}
 
       {keepSlime === "TRUE" && <SlimeName />}
       {modal &&
         keepSlime === "TRUE" &&
         chooseColor === "FALSE" &&
-        chooseName === "TRUE" && <SlimeColor handleModal={handleModal} />}
+        chooseName === "TRUE" &&
+        newColorQuest && (
+          <SlimeColor
+            handleModal={handleModal}
+            handleColorIsChoose={handleColorIsChoose}
+          />
+        )}
     </>
   );
 }

@@ -5,9 +5,13 @@ import styles from "../styles/Form.module.css";
 
 type SlimeProps = {
   handleModal: () => void;
+  handleColorIsChoose: () => void;
 };
 
-export default function SlimeColor({ handleModal }: SlimeProps) {
+export default function SlimeColor({
+  handleModal,
+  handleColorIsChoose,
+}: SlimeProps) {
   const [colorSlime, setColorSlime] = useState("");
   const { player } = useAuth();
   const { slime, fetchSlime } = useSlime();
@@ -47,6 +51,9 @@ export default function SlimeColor({ handleModal }: SlimeProps) {
         if (response.ok) {
           handleModal();
           fetchSlime();
+          sessionStorage.removeItem("newColorQuest");
+          sessionStorage.setItem("newColor", colorSlime);
+          handleColorIsChoose();
         }
       }
     } catch (error) {

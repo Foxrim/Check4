@@ -5,17 +5,60 @@ import { useAuth } from "../contexts/authContext";
 import styles from "../styles/Game.module.css";
 import Furniture from "./Furniture";
 
-export default function Dialogue() {
+type DialogueProps = {
+  handleColorIsChoose: () => void;
+  colorIsChoose: boolean;
+  killSlime: boolean;
+};
+
+export default function Dialogue({
+  colorIsChoose,
+  handleColorIsChoose,
+  killSlime,
+}: DialogueProps) {
   const { player } = useAuth();
-  const { quest } = useQuest();
+  const { quest, fetchQuest } = useQuest();
   const { slime, fetchSlime } = useSlime();
 
   const [dialogues, setDialogues] = useState([""]);
+  const [color, setColor] = useState("");
+
+  const [chooseName, setChooseName] = useState("");
 
   useEffect(() => {
-    fetchSlime();
-  }, [fetchSlime]);
+    const updateQuestState = async () => {
+      try {
+        await fetchQuest();
+        await fetchSlime();
+      } catch (error) {
+        console.error("Failed to update quest state:", error);
+      }
+    };
 
+    updateQuestState();
+  }, [fetchQuest, fetchSlime]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (quest) {
+      setChooseName(quest.choose_name ? "TRUE" : "FALSE");
+    } else {
+      setChooseName("FALSE");
+    }
+    if (slime) {
+      if (slime?.color === "red") {
+        setColor("rouge");
+      }
+      if (slime?.color === "blue") {
+        setColor("bleu");
+      }
+      if (slime?.color === "green") {
+        setColor("vert");
+      }
+    }
+  }, [quest, slime, setColor]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (slime?.status === "hidden") {
       setDialogues([
@@ -29,11 +72,11 @@ export default function Dialogue() {
         "   Votre slime vous attendais. ",
         "   Pensez à vous en occuper afin qu'il ne se sente pas seul de nouveau. ",
       ]);
-    } else if (slime?.status === "dead") {
+    } else if (slime?.status === "dead" && killSlime) {
       setDialogues([
         "   Vous revoilà... ",
         "   ... ",
-        "   Si vous trouvez cette maison si vide c'est par ce que le slime qui y vivait était mort par votre faute ! ",
+        "   Si vous trouvez cette maison si vide c'est par ce que le slime qui y vivait est mort par votre faute ! ",
       ]);
     }
   }, [slime?.status, quest?.keep_slime]);
@@ -88,6 +131,20 @@ export default function Dialogue() {
       "   Ce nouveau nom semble le rendre heureux ",
     ];
   }, [slime?.name]);
+  const dRenameSlime = useMemo(() => {
+    return [
+      `   Vous avez décidé de renomé votre slime en ${slime?.name} ???  `,
+      "   *sautille* ",
+      "   Ce nouveau nom semble lui plaire ! ",
+    ];
+  }, [slime?.name]);
+  const dNewColorStart = useMemo(() => {
+    return [
+      `    ${slime?.name} à toujours l'air aussi pale.  `,
+      "   On dit que la couleur d’un slime représente son bonheur. ",
+      "   Plus elle est pale, plus le slime est triste. Pourquoi ne pas éssayer d'arranger ça ? ",
+    ];
+  }, [slime?.name]);
   const [dCupboard2] = useState(
     "   Il n'y a pas encore de slime caché derrière j'espère ?",
   );
@@ -96,7 +153,7 @@ export default function Dialogue() {
   );
   const [dCarpet] = useState("   Il ne faudrait pas salir la maison.");
   const [dTable] = useState("   C'est une table... Rien de spécial quoi.");
-  const speed = 50;
+  const speed = 30;
   const [typing, setTyping] = useState(false);
 
   const startNewDialogue = useCallback((newDialogues: string[]) => {
@@ -159,11 +216,46 @@ export default function Dialogue() {
   useEffect(() => {
     const newName = sessionStorage.getItem("newName");
 
-    if (newName) {
+    if (newName && chooseName === "FALSE") {
       startNewDialogue(dNewName);
       sessionStorage.removeItem("newName");
+
+      setTimeout(() => {
+        sessionStorage.removeItem("newColorStart");
+        startNewDialogue(dNewColorStart);
+        sessionStorage.setItem("newColorQuest", newName);
+      }, 6000);
     }
-  }, [dNewName, slime?.name]);
+  }, [dNewName, slime?.name, chooseName]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    const newName = sessionStorage.getItem("newName");
+
+    if (newName && chooseName === "TRUE") {
+      startNewDialogue(dRenameSlime);
+      sessionStorage.removeItem("newName");
+    }
+  }, [slime?.name, chooseName]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (colorIsChoose && color !== "") {
+      startNewDialogue(dColorQuest);
+      handleColorIsChoose();
+      sessionStorage.removeItem("newColor");
+    }
+  }, [dNewName, colorIsChoose, color]);
+
+  const dColorQuest = useMemo(() => {
+    return [
+      `   Wow ! ${slime?.name} semble se porter mieux !  `,
+      "   *sautille* ",
+      `   Il est désormait ${color} vif ! `,
+      "   *sautille*sautille* ",
+      "   Lui aussi est ravis de sa nouvelle couleur ! ",
+    ];
+  }, [slime?.name, color]);
 
   useEffect(() => {
     if (slime?.status === "hidden") {
@@ -211,7 +303,7 @@ export default function Dialogue() {
             console.error("Failed to update slime status");
           }
         }
-      }, 7500);
+      }, 4500);
     };
 
     if (!isNotHidden && !exCupboard && player?.id) {
@@ -259,7 +351,7 @@ export default function Dialogue() {
       const timer = setTimeout(() => {
         setCurrentDialogueIndex((prevIndex) => prevIndex + 1);
         setText("");
-      }, 2000);
+      }, 500);
       return () => clearTimeout(timer);
     }
   }, [typing, currentDialogueIndex, dialogues]);

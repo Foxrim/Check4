@@ -17,7 +17,16 @@ export default function GamePage() {
   const { quest, fetchQuest } = useQuest();
   const [modal, setModal] = useState<boolean>(false);
   const [keepSlime, setKeepSlime] = useState("");
+  const [chooseName, setChooseName] = useState("");
   const [chooseColor, setChooseColor] = useState("");
+  const [colorIsChoose, setColorIsChoose] = useState<boolean>(false);
+  const [killSlime, setKillSlime] = useState<boolean>(true);
+
+  const newColorQuest = sessionStorage.getItem("newColorQuest");
+
+  const handleKill = () => {
+    setKillSlime((prev) => !prev);
+  };
 
   useEffect(() => {
     const updateQuestState = async () => {
@@ -34,6 +43,7 @@ export default function GamePage() {
   useEffect(() => {
     if (quest) {
       setKeepSlime(quest.keep_slime ? "TRUE" : "FALSE");
+      setChooseName(quest.choose_name ? "TRUE" : "FALSE");
       setChooseColor(quest.choose_color ? "TRUE" : "FALSE");
     } else {
       setKeepSlime("FALSE");
@@ -45,6 +55,10 @@ export default function GamePage() {
 
   const handleModal = () => {
     setModal((prev) => !prev);
+  };
+
+  const handleColorIsChoose = () => {
+    setColorIsChoose((prev) => !prev);
   };
 
   return (
@@ -66,19 +80,30 @@ export default function GamePage() {
         </figure>
       </section>
 
-      <Dialogue />
+      <Dialogue
+        colorIsChoose={colorIsChoose}
+        handleColorIsChoose={handleColorIsChoose}
+        killSlime={killSlime}
+      />
 
       <Logout />
       <PlayerPseudo />
 
       {modal && keepSlime === "FALSE" && (
-        <SlimeKeep handleModal={handleModal} />
+        <SlimeKeep handleModal={handleModal} handleKill={handleKill} />
       )}
 
       {keepSlime === "TRUE" && <SlimeName />}
-      {modal && keepSlime === "TRUE" && chooseColor === "FALSE" && (
-        <SlimeColor handleModal={handleModal} />
-      )}
+      {modal &&
+        keepSlime === "TRUE" &&
+        chooseColor === "FALSE" &&
+        chooseName === "TRUE" &&
+        newColorQuest && (
+          <SlimeColor
+            handleModal={handleModal}
+            handleColorIsChoose={handleColorIsChoose}
+          />
+        )}
     </>
   );
 }

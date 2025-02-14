@@ -6,9 +6,10 @@ import styles from "../styles/Form.module.css";
 
 type SlimeKeepProps = {
   handleModal: () => void;
+  handleKill: () => void;
 };
 
-export default function SlimeKeep({ handleModal }: SlimeKeepProps) {
+export default function SlimeKeep({ handleModal, handleKill }: SlimeKeepProps) {
   const [keepSlime, setKeepSlime] = useState("");
   const { player } = useAuth();
   const { fetchQuest } = useQuest();
@@ -28,6 +29,7 @@ export default function SlimeKeep({ handleModal }: SlimeKeepProps) {
 
     try {
       if (keepSlime === "no") {
+        handleKill();
         const response = await fetch(
           `${import.meta.env.VITE_API_URL}/api/slime/status/${player?.id}`,
           {

@@ -32,6 +32,7 @@ import questActions from "./modules/quest/questActions";
 
 router.get("/api/quest/:player_id", questActions.read);
 router.put("/api/quest/keep_slime/:player_id", questActions.editKeepSlime);
+router.put("/api/quest/choose_name/:player_id", questActions.editChooseName);
 router.put("/api/quest/choose_color/:player_id", questActions.editChooseColor);
 
 /* ************************************************************************* */

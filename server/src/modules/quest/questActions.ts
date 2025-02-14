@@ -13,6 +13,18 @@ const editKeepSlime: RequestHandler = async (req, res) => {
   }
 };
 
+const editChooseName: RequestHandler = async (req, res) => {
+  try {
+    const player_id = Number(req.params.player_id);
+    const quests = await questRepository.editChooseName(player_id);
+
+    res.status(200).json(quests);
+  } catch (err) {
+    console.error("Error updating quest name:", err);
+    res.status(500).json({ message: "Failed to update quest name" });
+  }
+};
+
 const editChooseColor: RequestHandler = async (req, res) => {
   try {
     const player_id = Number(req.params.player_id);
@@ -37,4 +49,4 @@ const read: RequestHandler = async (req, res) => {
   }
 };
 
-export default { editKeepSlime, editChooseColor, read };
+export default { editKeepSlime, editChooseName, editChooseColor, read };
